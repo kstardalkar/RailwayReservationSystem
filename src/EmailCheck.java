@@ -1,6 +1,4 @@
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.*;
 public class EmailCheck {
     public static boolean isValid(String email)
     {

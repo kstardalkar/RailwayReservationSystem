@@ -1,8 +1,28 @@
 import java.util.*;
+class WelcomePage
+{
+    public static User Welcome() throws UserExistsException, InvalidPasswordException, InvalidUsernameException {
+        System.out.println("Welcome to Railway Reservation System!\n1.Login\n2.Quit");
+        Scanner sc = new Scanner(System.in);
+        User l = new User();
+        int a = sc.nextInt();
+        switch (a) {
+            case (1) -> l.login();
+            case (2) -> {
+                System.out.println("Quitting the program...");
+                System.exit(0);
+            }
+            default -> System.out.println("Enter a valid choice");
+        }
+        return l;
+    }
+}
+
 class Login
 {
     private String username, password;
-    public boolean login() throws InvalidUsernameException, InvalidPasswordException, UserExistsException{
+    String getUsername() {return username;}
+    public void login() throws InvalidUsernameException, InvalidPasswordException, UserExistsException{
         Scanner sc = new Scanner(System.in);
         try
         {
@@ -16,6 +36,7 @@ class Login
             System.out.println("Enter Password: ");
             password = sc.nextLine();
             if(!password.equals(UserList.users.get(username))) throw new InvalidPasswordException("Incorrect Password!");
+            System.out.println("You are logged in successfully...");
         }
         catch (InvalidUsernameException iUex)
         {
@@ -23,9 +44,13 @@ class Login
             if(iUex.getMessage().equals("This user does not exist!"))
             {
                 System.out.println("Would you like to register instead? [Y/N]");
-                if(sc.nextLine().equalsIgnoreCase("Y")) new Register().register();
-                System.out.println("Returning to login page...");
-                login();
+                if(sc.nextLine().equalsIgnoreCase("Y"))
+                {
+                    new Register().register();
+                    System.out.println("Returning to login page...");
+                    login();
+                }
+                else {System.out.println("Quitting the program..."); System.exit(0);}
             }
             else login();
         }
@@ -38,7 +63,7 @@ class Login
         {
             System.out.println("Something went wrong...");
         }
-        return (password.equals(UserList.users.get(username)));
+        //return (password.equals(UserList.users.get(username)));
     }
 }
 class Register extends UserList
@@ -58,18 +83,13 @@ class Register extends UserList
             if(pass.isEmpty()) throw new InvalidPasswordException("Password cannot be blank! Please try again...");
             users.put(user,pass);
             System.out.println("User created successfully!");
+
         }
-        catch (InvalidUsernameException iEex)
+        catch (InvalidUsernameException | InvalidPasswordException iEex)
         {
             System.out.println(iEex.getMessage());
             register();
-        }
-        catch (InvalidPasswordException bPex)
-        {
-            System.out.println(bPex.getMessage());
-            register();
-        }
-        catch (UserExistsException uEex)
+        } catch (UserExistsException uEex)
         {
             System.out.println(uEex.getMessage());
         }
@@ -83,3 +103,4 @@ class UserList
 {
     protected static HashMap<String, String> users = new HashMap<>();
 }
+
